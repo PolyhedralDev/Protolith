@@ -4,7 +4,7 @@ import io.vavr.Function1;
 import io.vavr.Function2;
 
 /**
- * A lens which extracts a component {@link A} from its context {@link S}.
+ * A lens allows viewing and updating a component {@link A} from its context {@link S}.
  *
  * @param <A> Component
  * @param <B> Updated component
@@ -17,7 +17,7 @@ import io.vavr.Function2;
 public record Lens<A, B, S, T>(
         Function1<S, A> view,
         Function2<B, S, T> update
-) {
+) implements Optic<A, B, S, T> {
     /**
      * View the component {@link A} on a context instance {@param context}.
      * @param context Context instance.

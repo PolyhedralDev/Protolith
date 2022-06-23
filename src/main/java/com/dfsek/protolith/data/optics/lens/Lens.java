@@ -1,5 +1,6 @@
-package com.dfsek.protolith.data.optics;
+package com.dfsek.protolith.data.optics.lens;
 
+import com.dfsek.protolith.data.optics.Optic;
 import io.vavr.Function1;
 import io.vavr.Function2;
 
@@ -35,5 +36,10 @@ public record Lens<A, B, S, T>(
      */
     public T update(B component, S context) {
         return update.apply(component, context);
+    }
+
+    @Override
+    public Function1<S, T> apply(Function1<A, B> f) {
+        return s -> update.apply(f.apply(view.apply(s)), s);
     }
 }

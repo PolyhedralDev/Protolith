@@ -1,5 +1,6 @@
-package com.dfsek.protolith.data.optics;
+package com.dfsek.protolith.data.optics.prism;
 
+import com.dfsek.protolith.data.optics.Optic;
 import io.vavr.Function1;
 import io.vavr.control.Either;
 
@@ -35,5 +36,10 @@ public record Prism<A, B, S, T>(
      */
     public T build(B component) {
         return build.apply(component);
+    }
+
+    @Override
+    public Function1<S, T> apply(Function1<A, B> f) {
+        return s -> match.apply(s).fold(a -> build(f.apply(a)), Function1.identity());
     }
 }

@@ -1,4 +1,4 @@
-import com.dfsek.protolith.data.optics.Lens;
+import com.dfsek.protolith.data.optics.lens.Lens;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,4 +1,4 @@
-import com.dfsek.protolith.data.optics.Prism;
+import com.dfsek.protolith.data.optics.prism.Prism;
 import io.vavr.Tuple2;
 import io.vavr.control.Either;
 import org.junit.jupiter.api.Test;

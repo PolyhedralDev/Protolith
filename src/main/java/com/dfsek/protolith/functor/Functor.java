@@ -19,8 +19,8 @@ public interface Functor<A, F extends Functor<?, F>> {
      */
     <B> Functor<B, F> map(Function<? super A, ? extends B> f);
 
+    @SuppressWarnings("unchecked")
     default <C extends Functor<A, F>> C coerce() {
-        //noinspection unchecked
         return (C) this;
     }
 }

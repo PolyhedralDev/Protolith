@@ -1,13 +1,16 @@
 package com.dfsek.protolith.optics;
 
+import com.dfsek.protolith.functor.Functor;
 import com.dfsek.protolith.functor.Profunctor;
 import com.dfsek.protolith.functor.profunctors.Cartesian;
+import com.dfsek.protolith.monad.Monad;
 
 import java.util.function.Function;
 
 @FunctionalInterface
 public interface Lens<S, T, A, B> extends
-        Optic<Cartesian<?, ?, ?>, S, T, A, B>,
+        Optic<Cartesian<?, ?, ?>, Functor<?, ?>, S, T, A, B>,
+        Monad<T, Lens<S, ?, A, B>>,
         Profunctor<S, T, Lens<?, ?, A, B>> {
     @Override
     default <R> Lens<R, T, A, B> mapLeft(Function<? super R, ? extends S> fn) {

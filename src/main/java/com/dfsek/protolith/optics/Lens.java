@@ -4,6 +4,7 @@ import com.dfsek.protolith.functor.Functor;
 import com.dfsek.protolith.functor.Profunctor;
 import com.dfsek.protolith.functor.profunctors.Cartesian;
 import com.dfsek.protolith.monad.Monad;
+import com.dfsek.protolith.optics.interact.View;
 
 import java.util.function.Function;
 
@@ -25,5 +26,15 @@ public interface Lens<S, T, A, B> extends
     @Override
     default <R, U> Lens<R, U, A, B> diMap(Function<? super R, ? extends S> lFn, Function<? super T, ? extends U> rFn) {
         return this.<R>mapLeft(lFn).mapRight(rFn);
+    }
+
+    @Override
+    default <U> Lens<S, U, A, B> flatMap(Function<? super T, ? extends Monad<U, Lens<S, ?, A, B>>> f) {
+        return lens(View.view(this), (s, b) -> set(f.apply(set(this, b, s)).<Lens<S, U, A, B>>coerce(), b, s));
+    }
+
+    @Override
+    default <U> Lens<S, U, A, B> pure(U u) {
+        return lens(View.view(this), (s, b) -> u);
     }
 }

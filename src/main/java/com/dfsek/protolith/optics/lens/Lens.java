@@ -1,16 +1,15 @@
-package com.dfsek.protolith.optics;
+package com.dfsek.protolith.optics.lens;
 
 import com.dfsek.protolith.functor.Functor;
 import com.dfsek.protolith.functor.Profunctor;
 import com.dfsek.protolith.functor.profunctors.Cartesian;
 import com.dfsek.protolith.monad.Monad;
+import com.dfsek.protolith.optics.Optic;
 import com.dfsek.protolith.optics.interact.Set;
 import com.dfsek.protolith.optics.interact.View;
-import io.vavr.CheckedFunction2;
 import io.vavr.Function2;
 import io.vavr.Tuple2;
 
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 @FunctionalInterface

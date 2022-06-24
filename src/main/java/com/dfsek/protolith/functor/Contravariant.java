@@ -1,8 +1,8 @@
 package com.dfsek.protolith.functor;
 
-import java.util.function.Function;
+import io.vavr.Function1;
 
 @FunctionalInterface
 public interface Contravariant<A, C extends Contravariant<?, C>> {
-    <B> Contravariant<B, C> contraMap(Function<? super B, ? extends A> fn);
+    <B> Contravariant<B, C> contraMap(Function1<? super B, ? extends A> fn);
 }

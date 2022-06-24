@@ -2,13 +2,11 @@ package com.dfsek.protolith.optics.interact;
 
 import com.dfsek.protolith.functor.function.Fun;
 import com.dfsek.protolith.functor.functors.Const;
-import com.dfsek.protolith.functor.profunctors.Cartesian;
 import com.dfsek.protolith.optics.Optic;
+import io.vavr.Function1;
+import io.vavr.Function2;
 
-import java.util.function.BiFunction;
-import java.util.function.Function;
-
-public final class View<S, T, A, B> implements BiFunction<Optic<? super Fun<?, ?>, ? super Const<A, ?>, S, T, A, B>, S, A> {
+public final class View<S, T, A, B> implements Function2<Optic<? super Fun<?, ?>, ? super Const<A, ?>, S, T, A, B>, S, A> {
     private static final View<?, ?, ?, ?> INSTANCE = new View<>();
     private View() {
 
@@ -19,7 +17,7 @@ public final class View<S, T, A, B> implements BiFunction<Optic<? super Fun<?, ?
         return (View<S, T, A, B>) INSTANCE;
     }
 
-    public static <S, T, A, B> Function<S, A> view(Optic<? super Fun<?, ?>, ? super Const<A, ?>, S, T, A, B> optic) {
+    public static <S, T, A, B> Function1<S, A> view(Optic<? super Fun<?, ?>, ? super Const<A, ?>, S, T, A, B> optic) {
         return s -> view(optic, s);
     }
 

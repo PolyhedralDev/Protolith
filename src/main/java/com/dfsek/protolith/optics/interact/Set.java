@@ -7,8 +7,6 @@ import io.vavr.Function1;
 import io.vavr.Function2;
 import io.vavr.Function3;
 
-import java.util.function.Function;
-
 public final class Set<S, T, A, B> implements Function3<Optic<? super Fun<?, ?>, ? super Identity<?>, S, T, A, B>, B, S, T> {
 
     private static final Set<?, ?, ?, ?> INSTANCE = new Set<>();
@@ -30,7 +28,7 @@ public final class Set<S, T, A, B> implements Function3<Optic<? super Fun<?, ?>,
         return Set.<S, T, A, B>set().apply(optic);
     }
 
-    public static <S, T, A, B> Function<S, T> set(Optic<? super Fun<?, ?>, ? super Identity<?>, S, T, A, B> optic, B b) {
+    public static <S, T, A, B> Function1<S, T> set(Optic<? super Fun<?, ?>, ? super Identity<?>, S, T, A, B> optic, B b) {
         return set(optic).apply(b);
     }
 

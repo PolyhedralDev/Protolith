@@ -1,6 +1,6 @@
 package com.dfsek.protolith.functor;
 
-import java.util.function.Function;
+import io.vavr.Function1;
 
 /**
  * Represents a type that may be mapped.
@@ -17,7 +17,7 @@ public interface Functor<A, F extends Functor<?, F>> {
      * @param <B> Type of new value.
      * @return New instance of this functor containing mapped value.
      */
-    <B> Functor<B, F> map(Function<? super A, ? extends B> f);
+    <B> Functor<B, F> map(Function1<? super A, ? extends B> f);
 
     @SuppressWarnings("unchecked")
     default <C extends Functor<A, F>> C coerce() {

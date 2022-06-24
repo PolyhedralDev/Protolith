@@ -2,8 +2,7 @@ package com.dfsek.protolith.optics;
 
 import com.dfsek.protolith.functor.Functor;
 import com.dfsek.protolith.functor.Profunctor;
-
-import java.util.function.Function;
+import io.vavr.Function1;
 
 public interface Optic<P extends Profunctor<?, ?, ? extends P>, F extends Functor<?, ? extends F>, S, T, A, B> {
     static <P extends Profunctor<?, ?, ? extends P>,
@@ -12,7 +11,7 @@ public interface Optic<P extends Profunctor<?, ?, ? extends P>, F extends Functo
             FB extends Functor<B, ? extends F>,
             FT extends Functor<T, ? extends F>,
             PAFB extends Profunctor<A, FB, ? extends P>,
-            PSFT extends Profunctor<S, FT, ? extends P>> Optic<P, F, S, T, A, B> optic(Function<PAFB, PSFT> fn) {
+            PSFT extends Profunctor<S, FT, ? extends P>> Optic<P, F, S, T, A, B> optic(Function1<PAFB, PSFT> fn) {
         return new Optic<>() {
             @Override
             @SuppressWarnings("unchecked")

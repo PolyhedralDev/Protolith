@@ -7,17 +7,16 @@ import com.dfsek.protolith.monad.Monad;
 import com.dfsek.protolith.optics.Optic;
 import com.dfsek.protolith.optics.interact.Set;
 import com.dfsek.protolith.optics.interact.View;
+import io.vavr.Function1;
 import io.vavr.Function2;
 import io.vavr.Tuple2;
-
-import java.util.function.Function;
 
 @FunctionalInterface
 public interface Lens<S, T, A, B> extends
         Optic<Cartesian<?, ?, ?>, Functor<?, ?>, S, T, A, B>,
         Monad<T, Lens<S, ?, A, B>>,
         Profunctor<S, T, Lens<?, ?, A, B>> {
-    static <S, T, A, B> Lens<S, T, A, B> lens(Function<? super S, ? extends A> getter,
+    static <S, T, A, B> Lens<S, T, A, B> lens(Function1<? super S, ? extends A> getter,
                                               Function2<? super S, ? super B, ? extends T> setter) {
         return lens(Optic.<Cartesian<?, ?, ?>, Functor<?, ?>,
                 S, T, A, B,
@@ -44,22 +43,22 @@ public interface Lens<S, T, A, B> extends
     }
 
     @Override
-    default <R> Lens<R, T, A, B> mapLeft(Function<? super R, ? extends S> fn) {
+    default <R> Lens<R, T, A, B> mapLeft(Function1<? super R, ? extends S> fn) {
         return (Lens<R, T, A, B>) Profunctor.super.<R>mapLeft(fn);
     }
 
     @Override
-    default <U> Lens<S, U, A, B> mapRight(Function<? super T, ? extends U> fn) {
+    default <U> Lens<S, U, A, B> mapRight(Function1<? super T, ? extends U> fn) {
         return (Lens<S, U, A, B>) Profunctor.super.<U>mapRight(fn);
     }
 
     @Override
-    default <R, U> Lens<R, U, A, B> diMap(Function<? super R, ? extends S> lFn, Function<? super T, ? extends U> rFn) {
+    default <R, U> Lens<R, U, A, B> diMap(Function1<? super R, ? extends S> lFn, Function1<? super T, ? extends U> rFn) {
         return this.<R>mapLeft(lFn).mapRight(rFn);
     }
 
     @Override
-    default <U> Lens<S, U, A, B> flatMap(Function<? super T, ? extends Monad<U, Lens<S, ?, A, B>>> f) {
+    default <U> Lens<S, U, A, B> flatMap(Function1<? super T, ? extends Monad<U, Lens<S, ?, A, B>>> f) {
         return lens(View.view(this), (s, b) -> Set.set(f.apply(Set.set(this, b, s)).<Lens<S, U, A, B>>coerce(), b, s));
     }
 

@@ -1,9 +1,8 @@
 package com.dfsek.protolith.functor.functors;
 
-import com.dfsek.protolith.functor.Bifunctor;
 import com.dfsek.protolith.monad.Monad;
+import io.vavr.Function1;
 
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public record Identity<A>(A value) implements
@@ -16,7 +15,7 @@ public record Identity<A>(A value) implements
     }
 
     @Override
-    public <B> Identity<B> flatMap(Function<? super A, ? extends Monad<B, Identity<?>>> f) {
+    public <B> Identity<B> flatMap(Function1<? super A, ? extends Monad<B, Identity<?>>> f) {
         return f.apply(get()).coerce();
     }
 

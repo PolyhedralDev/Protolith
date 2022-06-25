@@ -5,6 +5,7 @@ import io.vavr.collection.List;
 
 public class Classroom {
     public static SimpleLens<Classroom, Person> TEACHER = SimpleLens.lens(Classroom::getTeacher, Classroom::withTeacher);
+    public static SimpleLens<Classroom, List<Person>> STUDENTS = SimpleLens.lens(Classroom::getStudents, Classroom::withStudents);
     private final List<Person> students;
     private final Person teacher;
 
@@ -27,5 +28,9 @@ public class Classroom {
 
     public Classroom withTeacher(Person person) {
         return new Classroom(students, person);
+    }
+
+    public Classroom withStudents(List<Person> students) {
+        return new Classroom(students, this.teacher);
     }
 }

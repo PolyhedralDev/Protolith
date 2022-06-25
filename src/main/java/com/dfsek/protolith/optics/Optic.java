@@ -11,7 +11,7 @@ public interface Optic<P extends Profunctor<?, ?, ? extends P>, F extends Functo
             FB extends Functor<B, ? extends F>,
             FT extends Functor<T, ? extends F>,
             PAFB extends Profunctor<A, FB, ? extends P>,
-            PSFT extends Profunctor<S, FT, ? extends P>> Optic<P, F, S, T, A, B> optic(Function1<PAFB, PSFT> map) {
+            PSFT extends Profunctor<S, FT, ? extends P>> Optic<P, F, S, T, A, B> optic(Function1<PAFB, PSFT> fn) {
         return new Optic<>() {
             @Override
             @SuppressWarnings("unchecked")
@@ -22,7 +22,7 @@ public interface Optic<P extends Profunctor<?, ?, ? extends P>, F extends Functo
                     CoPAFB extends Profunctor<A, CoFB, ? extends CoP>,
                     CoPSFT extends Profunctor<S, CoFT, ? extends CoP>> CoPSFT apply(
                     CoPAFB pafb) {
-                return (CoPSFT) map.apply((PAFB) pafb);
+                return (CoPSFT) fn.apply((PAFB) pafb);
             }
         };
     }
@@ -33,7 +33,7 @@ public interface Optic<P extends Profunctor<?, ?, ? extends P>, F extends Functo
             PAFB extends Profunctor<A, FB, ? extends PN>,
             PSFT extends Profunctor<S, FT, ? extends PN>> PSFT apply(PAFB pafb);
 
-    default <U, V> Optic<P, F, U, V, A, B> compose(Optic<? super P, ? super F, U, V, S, T> other) {
+    default <U, V> Optic<P, F, U, V, A, B> compose(Optic<? super P, ? super F, U, V, S, T> g) {
         return new Optic<>() {
             @Override
             public <CoP extends Profunctor<?, ?, ? extends P>,
@@ -43,27 +43,37 @@ public interface Optic<P extends Profunctor<?, ?, ? extends P>, F extends Functo
                     PAFB extends Profunctor<A, FB, ? extends CoP>,
                     PRFU extends Profunctor<U, FU, ? extends CoP>>
             PRFU apply(PAFB pafb) {
-                return other.<CoP, CoF, Functor<T, ? extends CoF>, FU,
+                return g.<CoP, CoF, Functor<T, ? extends CoF>, FU,
                         Profunctor<S, Functor<T, ? extends CoF>, ? extends CoP>, PRFU>apply(Optic.this.apply(pafb));
             }
         };
     }
 
-    default <R> Optic<P, F, R, T, A, B> mapS(Function1<? super R, ? extends S> map) {
-        return optic(pafb -> apply(pafb).mapLeft(map));
+    default <R> Optic<P, F, R, T, A, B> mapS(Function1<? super R, ? extends S> fn) {
+        return optic(pafb -> {
+            Profunctor<S, Functor<T, ? extends F>, ? extends P> psft = apply(pafb);
+            return psft.mapLeft(fn);
+        });
     }
 
 
-    default <U> Optic<P, F, S, U, A, B> mapT(Function1<? super T, ? extends U> map) {
-        return optic(pafb -> apply(pafb).mapRight(ft -> ft.map(map)));
+    default <U> Optic<P, F, S, U, A, B> mapT(Function1<? super T, ? extends U> fn) {
+        return optic(pafb -> {
+            Profunctor<S, Functor<T, ? extends F>, ? extends P> psft = apply(pafb);
+            return psft.mapRight(ft -> ft.map(fn));
+        });
     }
 
-    default <C> Optic<P, F, S, T, C, B> mapA(Function1<? super A, ? extends C> map) {
-        return optic(pcfb -> apply(pcfb.mapLeft(map)));
+    default <C> Optic<P, F, S, T, C, B> mapA(Function1<? super A, ? extends C> fn) {
+        return optic(pcfb -> {
+            @SuppressWarnings("UnnecessaryLocalVariable")
+            Profunctor<S, Functor<T, ? extends F>, ? extends P> psft = apply(pcfb.mapLeft(fn));
+            return psft;
+        });
     }
 
 
-    default <Z> Optic<P, F, S, T, A, Z> mapB(Function1<? super Z, ? extends B> map) {
-        return optic(pafz -> apply(pafz.mapRight(fz -> fz.map(map))));
+    default <Z> Optic<P, F, S, T, A, Z> mapB(Function1<? super Z, ? extends B> fn) {
+        return optic(pafz -> apply(pafz.mapRight(fz -> fz.map(fn))));
     }
 }

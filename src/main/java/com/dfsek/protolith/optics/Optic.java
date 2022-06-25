@@ -33,4 +33,19 @@ public interface Optic<P extends Profunctor<?, ?, ? extends P>, F extends Functo
             PAFB extends Profunctor<A, FB, ? extends PN>,
             PSFT extends Profunctor<S, FT, ? extends PN>> PSFT apply(PAFB pafb);
 
+    default <U, V> Optic<P, F, U, V, A, B> compose(Optic<? super P, ? super F, U, V, S, T> g) {
+        return new Optic<>() {
+            @Override
+            public <CoP extends Profunctor<?, ?, ? extends P>,
+                    CoF extends Functor<?, ? extends F>,
+                    FB extends Functor<B, ? extends CoF>,
+                    FU extends Functor<V, ? extends CoF>,
+                    PAFB extends Profunctor<A, FB, ? extends CoP>,
+                    PRFU extends Profunctor<U, FU, ? extends CoP>>
+            PRFU apply(PAFB pafb) {
+                return g.<CoP, CoF, Functor<T, ? extends CoF>, FU,
+                        Profunctor<S, Functor<T, ? extends CoF>, ? extends CoP>, PRFU>apply(Optic.this.apply(pafb));
+            }
+        };
+    }
 }

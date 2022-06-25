@@ -18,7 +18,7 @@ public interface Lens<S, T, A, B> extends
         Profunctor<S, T, Lens<?, ?, A, B>> {
     static <S, T, A, B> Lens<S, T, A, B> lens(Function1<? super S, ? extends A> getter,
                                               Function2<? super S, ? super B, ? extends T> setter) {
-        return lens(Optic.<Cartesian<?, ?, ?>, Functor<?, ?>,
+        return adapt(Optic.<Cartesian<?, ?, ?>, Functor<?, ?>,
                 S, T, A, B,
                 Functor<B, ? extends Functor<?, ?>>,
                 Functor<T, ? extends Functor<?, ?>>,
@@ -27,7 +27,7 @@ public interface Lens<S, T, A, B> extends
                 afb -> afb.<S>cartesian().diMap(s -> new Tuple2<>(s, getter.apply(s)),
                         tuple -> tuple.apply((s, fb) -> fb.map(setter.apply(s))))));
     }
-    static <S, T, A, B> Lens<S, T, A, B> lens(
+    static <S, T, A, B> Lens<S, T, A, B> adapt(
             Optic<? super Cartesian<?, ?, ?>, ? super Functor<?, ?>, S, T, A, B> optic) {
         return new Lens<>() {
             @Override

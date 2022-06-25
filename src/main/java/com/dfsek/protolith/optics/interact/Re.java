@@ -39,6 +39,4 @@ public final class Re<S, T, A, B> implements
             Optic<? super Tagged<?, ?>, ? super Identity<?>, S, T, A, B> optic) {
         return Re.<S, T, A, B>re().apply(optic);
     }
-
-
 }

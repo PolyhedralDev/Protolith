@@ -27,11 +27,11 @@ public interface DSL {
         return View.view();
     }
 
-    static <S, T, A, B> Function1<S, A> view(Optic<? super Fun<?, ?>, ? super Const<A, ?>, S, T, A, B> optic) {
+    static <S, T, A, B> Function1<S, A> view(Optic<? super Fun<?, ?>, S, T, A, B> optic) {
         return View.view(optic);
     }
 
-    static <S, T, A, B> A view(Optic<? super Fun<?, ?>, ? super Const<A, ?>, S, T, A, B> optic, S s) {
+    static <S, T, A, B> A view(Optic<? super Fun<?, ?>, S, T, A, B> optic, S s) {
         return View.view(optic, s);
     }
 
@@ -39,15 +39,15 @@ public interface DSL {
         return Set.set();
     }
 
-    static <S, T, A, B> Function2<B, S, T> set(Optic<? super Fun<?, ?>, ? super Identity<?>, S, T, A, B> optic) {
+    static <S, T, A, B> Function2<B, S, T> set(Optic<? super Fun<?, ?>, S, T, A, B> optic) {
         return Set.set(optic);
     }
 
-    static <S, T, A, B> Function1<S, T> set(Optic<? super Fun<?, ?>, ? super Identity<?>, S, T, A, B> optic, B b) {
+    static <S, T, A, B> Function1<S, T> set(Optic<? super Fun<?, ?>, S, T, A, B> optic, B b) {
         return Set.set(optic, b);
     }
 
-    static <S, T, A, B> T set(Optic<? super Fun<?, ?>, ? super Identity<?>, S, T, A, B> optic, B b, S s) {
+    static <S, T, A, B> T set(Optic<? super Fun<?, ?>, S, T, A, B> optic, B b, S s) {
         return Set.set(optic, b, s);
     }
 
@@ -55,7 +55,7 @@ public interface DSL {
         return Re.re();
     }
 
-    static <S, T, A, B> Optic<Profunctor<?, ?, ?>, Const<T, ?>, B, B, T, T> re(Optic<? super Tagged<?, ?>, ? super Identity<?>, S, T, A, B> optic) {
+    static <S, T, A, B> Optic<Profunctor<?, ?, ?>, B, B, T, T> re(Optic<? super Tagged<?, ?>, S, T, A, B> optic) {
         return Re.re(optic);
     }
 
@@ -63,15 +63,15 @@ public interface DSL {
         return Over.over();
     }
 
-    static <S, T, A, B> Function2<Function1<? super A, ? extends B>, S, T> over(Optic<? super Fun<?, ?>, ? super Identity<?>, S, T, A, B> optic) {
+    static <S, T, A, B> Function2<Function1<? super A, ? extends B>, S, T> over(Optic<? super Fun<?, ?>, S, T, A, B> optic) {
         return Over.over(optic);
     }
 
-    static <S, T, A, B> Function1<S, T> over(Optic<? super Fun<?, ?>, ? super Identity<?>, S, T, A, B> optic, Function1<? super A, ? extends B> fn) {
+    static <S, T, A, B> Function1<S, T> over(Optic<? super Fun<?, ?>, S, T, A, B> optic, Function1<? super A, ? extends B> fn) {
         return Over.over(optic, fn);
     }
 
-    static <S, T, A, B> T over(Optic<? super Fun<?, ?>, ? super Identity<?>, S, T, A, B> optic, Function1<? super A, ? extends B> fn, S s) {
+    static <S, T, A, B> T over(Optic<? super Fun<?, ?>, S, T, A, B> optic, Function1<? super A, ? extends B> fn, S s) {
         return Over.over(optic, fn, s);
     }
 
@@ -79,11 +79,11 @@ public interface DSL {
         return Matching.matching();
     }
 
-    static <S, T, A, B> Function1<S, Either<T, A>> matching(Optic<? super Market<A, B, ?, ?>, ? super Identity<?>, S, T, A, B> optic) {
+    static <S, T, A, B> Function1<S, Either<T, A>> matching(Optic<? super Market<A, B, ?, ?>, S, T, A, B> optic) {
         return Matching.matching(optic);
     }
 
-    static <S, T, A, B> Either<T, A> matching(Optic<? super Market<A, B, ?, ?>, ? super Identity<?>, S, T, A, B> optic, S s) {
+    static <S, T, A, B> Either<T, A> matching(Optic<? super Market<A, B, ?, ?>, S, T, A, B> optic, S s) {
         return Matching.matching(optic, s);
     }
 
@@ -93,7 +93,7 @@ public interface DSL {
     }
 
     static <S, T, A, B> Lens<S, T, A, B> lens(
-            Optic<? super Cartesian<?, ?, ?>, ? super Functor<?, ?>, S, T, A, B> lens) {
+            Optic<? super Cartesian<?, ?, ?>, S, T, A, B> lens) {
         return Lens.adapt(lens);
     }
 
@@ -103,11 +103,11 @@ public interface DSL {
     }
 
     static <S, A> SimpleLens<S, A> simpleLens(
-            Optic<? super Cartesian<?, ?, ?>, ? super Functor<?, ?>, S, S, A, A> lens) {
+            Optic<? super Cartesian<?, ?, ?>, S, S, A, A> lens) {
         return SimpleLens.adapt(lens);
     }
 
-    static <S, T, A, B> Prism<S, T, A, B> prism(Optic<? super Cocartesian<?, ?, ?>, ? super Functor<?, ?>, S, T, A, B> prism) {
+    static <S, T, A, B> Prism<S, T, A, B> prism(Optic<? super Cocartesian<?, ?, ?>, S, T, A, B> prism) {
         return Prism.adapt(prism);
     }
 
@@ -120,7 +120,7 @@ public interface DSL {
     }
 
     static <S, A> SimplePrism<S, A> simplePrism(
-            Optic<? super Cocartesian<?, ?, ?>, ? super Functor<?, ?>, S, S, A, A> prism) {
+            Optic<? super Cocartesian<?, ?, ?>, S, S, A, A> prism) {
         return SimplePrism.adapt(prism);
     }
 }

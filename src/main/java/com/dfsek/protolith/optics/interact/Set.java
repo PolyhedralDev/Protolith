@@ -7,7 +7,7 @@ import io.vavr.Function1;
 import io.vavr.Function2;
 import io.vavr.Function3;
 
-public final class Set<S, T, A, B> implements Function3<Optic<? super Fun<?, ?>, ? super Identity<?>, S, T, A, B>, B, S, T> {
+public final class Set<S, T, A, B> implements Function3<Optic<? super Fun<?, ?>, S, T, A, B>, B, S, T> {
 
     private static final Set<?, ?, ?, ?> INSTANCE = new Set<>();
 
@@ -15,7 +15,7 @@ public final class Set<S, T, A, B> implements Function3<Optic<? super Fun<?, ?>,
     }
 
     @Override
-    public T apply(Optic<? super Fun<?, ?>, ? super Identity<?>, S, T, A, B> optic, B b, S s) {
+    public T apply(Optic<? super Fun<?, ?>, S, T, A, B> optic, B b, S s) {
         return Over.over(optic, Function1.constant(b), s);
     }
 
@@ -24,15 +24,15 @@ public final class Set<S, T, A, B> implements Function3<Optic<? super Fun<?, ?>,
         return (Set<S, T, A, B>) INSTANCE;
     }
 
-    public static <S, T, A, B> Function2<B, S, T> set(Optic<? super Fun<?, ?>, ? super Identity<?>, S, T, A, B> optic) {
+    public static <S, T, A, B> Function2<B, S, T> set(Optic<? super Fun<?, ?>, S, T, A, B> optic) {
         return Set.<S, T, A, B>set().apply(optic);
     }
 
-    public static <S, T, A, B> Function1<S, T> set(Optic<? super Fun<?, ?>, ? super Identity<?>, S, T, A, B> optic, B b) {
+    public static <S, T, A, B> Function1<S, T> set(Optic<? super Fun<?, ?>, S, T, A, B> optic, B b) {
         return set(optic).apply(b);
     }
 
-    public static <S, T, A, B> T set(Optic<? super Fun<?, ?>, ? super Identity<?>, S, T, A, B> optic, B b, S s) {
+    public static <S, T, A, B> T set(Optic<? super Fun<?, ?>, S, T, A, B> optic, B b, S s) {
         return set(optic, b).apply(s);
     }
 }

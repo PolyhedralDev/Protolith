@@ -16,15 +16,14 @@ import io.vavr.control.Either;
 
 @FunctionalInterface
 public interface Prism<S, T, A, B> extends
-        Optic<Cocartesian<?, ?, ?>, Functor<?, ?>, S, T, A, B>,
+        Optic<Cocartesian<?, ?, ?>, S, T, A, B>,
         Monad<T, Prism<S, ?, A, B>> {
-    static <S, T, A, B> Prism<S, T, A, B> adapt(Optic<? super Cocartesian<?, ?, ?>, ? super Functor<?, ?>, S, T, A, B> prism) {
+    static <S, T, A, B> Prism<S, T, A, B> adapt(Optic<? super Cocartesian<?, ?, ?>, S, T, A, B> prism) {
         return new Prism<>() {
             @Override
             public <PN extends Profunctor<?, ?, ? extends Cocartesian<?, ?, ?>>,
-                    FN extends Functor<?, ? extends Functor<?, ?>>,
-                    FB extends Functor<B, ? extends FN>,
-                    FT extends Functor<T, ? extends FN>,
+                    FB extends Functor<B, ?>,
+                    FT extends Functor<T, ?>,
                     PAFB extends Profunctor<A, FB, ? extends PN>,
                     PSFT extends Profunctor<S, FT, ? extends PN>> PSFT apply(PAFB pafb) {
                 return prism.apply(pafb);
@@ -33,7 +32,7 @@ public interface Prism<S, T, A, B> extends
     }
 
     static <S, T, A, B> Prism<S, T, A, B> prism(Function1<S, Either<T, A>> match, Function1<B, T> build) {
-        return adapt(Optic.<Cocartesian<?, ?, ?>, Functor<?, ?>,
+        return adapt(Optic.<Cocartesian<?, ?, ?>,
                 S, T, A, B,
                 Functor<B, ? extends Functor<?, ?>>,
                 Functor<T, ? extends Functor<?, ?>>,

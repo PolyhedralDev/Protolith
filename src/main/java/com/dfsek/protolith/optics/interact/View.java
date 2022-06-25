@@ -18,9 +18,8 @@ public final class View<S, T, A, B> implements Function2<Optic<? super Fun<?, ?>
     }
 
     public static <S, T, A, B> Function1<S, A> view(Optic<? super Fun<?, ?>, ? super Const<A, ?>, S, T, A, B> optic) {
-        return s -> view(optic, s);
+        return View.<S, T, A, B>view().apply(optic);
     }
-
 
     public static <S, T, A, B> A view(Optic<? super Fun<?, ?>, ? super Const<A, ?>, S, T, A, B> optic, S s) {
         return view(optic).apply(s);

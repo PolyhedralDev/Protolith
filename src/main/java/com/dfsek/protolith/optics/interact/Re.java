@@ -8,9 +8,12 @@ import com.dfsek.protolith.functor.functors.Tagged;
 import com.dfsek.protolith.optics.Optic;
 import io.vavr.Function1;
 
+/**
+ * Flip an optic around
+ */
 public final class Re<S, T, A, B> implements
         Function1<Optic<? super Tagged<?, ?>, ? super Identity<?>, S, T, A, B>,
-                Optic<Profunctor<?, ?, ?>, Const<T, ?>, B, B, T, T>> {
+                Optic<Profunctor<?, ?, ?>, Const<T, ?>, B, A, T, S>> {
 
     private static final Re<?, ?, ?, ?> INSTANCE = new Re<>();
 
@@ -18,12 +21,12 @@ public final class Re<S, T, A, B> implements
     }
 
     @Override
-    public Optic<Profunctor<?, ?, ?>, Const<T, ?>, B, B, T, T> apply(
+    public Optic<Profunctor<?, ?, ?>, Const<T, ?>, B, A, T, S> apply(
             Optic<? super Tagged<?, ?>, ? super Identity<?>, S, T, A, B> optic) {
-        return Optic.<Profunctor<?, ?, ?>, Const<T, ?>, B, B, T, T,
-                Const<T, T>, Const<T, B>,
-                Profunctor<T, Const<T, T>, ? extends Profunctor<?, ?, ?>>,
-                Profunctor<B, Const<T, B>, ? extends Profunctor<?, ?, ?>>>optic(
+        return Optic.<Profunctor<?, ?, ?>, Const<T, ?>, B, A, T, S,
+                Const<T, S>, Const<T, A>,
+                Profunctor<T, Const<T, S>, ? extends Profunctor<?, ?, ?>>,
+                Profunctor<B, Const<T, A>, ? extends Profunctor<?, ?, ?>>>optic(
                 pafb -> pafb.diMap(
                         (Function1<B, T>) b -> optic.<Tagged<?, ?>, Identity<?>, Identity<B>, Identity<T>,
                                 Tagged<A, Identity<B>>, Tagged<S, Identity<T>>>apply(new Tagged<>(new Identity<>(b))).get().get(),
@@ -35,7 +38,7 @@ public final class Re<S, T, A, B> implements
         return (Re<S, T, A, B>) INSTANCE;
     }
 
-    public static <S, T, A, B> Optic<Profunctor<?, ?, ?>, Const<T, ?>, B, B, T, T> re(
+    public static <S, T, A, B> Optic<Profunctor<?, ?, ?>, Const<T, ?>, B, A, T, S> re(
             Optic<? super Tagged<?, ?>, ? super Identity<?>, S, T, A, B> optic) {
         return Re.<S, T, A, B>re().apply(optic);
     }

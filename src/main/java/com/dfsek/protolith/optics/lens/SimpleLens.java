@@ -14,13 +14,12 @@ public interface SimpleLens<S, A> extends Lens<S, S, A, A> {
     }
 
     static <S, A> SimpleLens<S, A> adapt(
-            Optic<? super Cartesian<?, ?, ?>, S, S, A, A> lens) {
+            Optic<? super Cartesian<?, ?, ?>, ? super Functor<?, ?>, S, S, A, A> lens) {
         return new SimpleLens<>() {
             @Override
             public <CoP extends Profunctor<?, ?, ? extends Cartesian<?, ?, ?>>,
-                    FB extends Functor<A, ?>,
-                    FT extends Functor<S, ?>,
-                    PAFB extends Profunctor<A, FB, ? extends CoP>,
+                    CoF extends Functor<?, ? extends Functor<?, ?>>, FB extends Functor<A, ? extends CoF>,
+                    FT extends Functor<S, ? extends CoF>, PAFB extends Profunctor<A, FB, ? extends CoP>,
                     PSFT extends Profunctor<S, FT, ? extends CoP>> PSFT apply(PAFB pafb) {
                 return lens.apply(pafb);
             }

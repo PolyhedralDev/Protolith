@@ -8,7 +8,7 @@ import io.vavr.Function2;
 import io.vavr.Function3;
 
 public final class Over<S, T, A, B> implements
-        Function3<Optic<? super Fun<?, ?>, S, T, A, B>, Function1<? super A, ? extends B>, S, T> {
+        Function3<Optic<? super Fun<?, ?>, ? super Identity<?>, S, T, A, B>, Function1<? super A, ? extends B>, S, T> {
 
     private static final Over<?, ?, ?, ?> INSTANCE = new Over<>();
 
@@ -16,10 +16,10 @@ public final class Over<S, T, A, B> implements
     }
 
     @Override
-    public T apply(Optic<? super Fun<?, ?>, S, T, A, B> optic,
+    public T apply(Optic<? super Fun<?, ?>, ? super Identity<?>, S, T, A, B> optic,
                           Function1<? super A, ? extends B> fn,
                           S s) {
-        return optic.<Fun<?, ?>, Identity<B>, Identity<T>, Fun<A, Identity<B>>, Fun<S, Identity<T>>>apply(
+        return optic.<Fun<?, ?>, Identity<?>, Identity<B>, Identity<T>, Fun<A, Identity<B>>, Fun<S, Identity<T>>>apply(
                 a -> new Identity<>(fn.apply(a))).apply(s).get();
     }
 
@@ -29,16 +29,16 @@ public final class Over<S, T, A, B> implements
     }
 
     public static <S, T, A, B> Function2<Function1<? super A, ? extends B>, S, T> over(
-            Optic<? super Fun<?, ?>, S, T, A, B> optic) {
+            Optic<? super Fun<?, ?>, ? super Identity<?>, S, T, A, B> optic) {
         return Over.<S, T, A, B>over().apply(optic);
     }
 
-    public static <S, T, A, B> Function1<S, T> over(Optic<? super Fun<?, ?>, S, T, A, B> optic,
+    public static <S, T, A, B> Function1<S, T> over(Optic<? super Fun<?, ?>, ? super Identity<?>, S, T, A, B> optic,
                                               Function1<? super A, ? extends B> fn) {
         return over(optic).apply(fn);
     }
 
-    public static <S, T, A, B> T over(Optic<? super Fun<?, ?>, S, T, A, B> optic,
+    public static <S, T, A, B> T over(Optic<? super Fun<?, ?>, ? super Identity<?>, S, T, A, B> optic,
                                       Function1<? super A, ? extends B> fn, S s) {
         return over(optic, fn).apply(s);
     }

@@ -13,12 +13,12 @@ import io.vavr.Tuple2;
 
 @FunctionalInterface
 public interface Lens<S, T, A, B> extends
-        Optic<Cartesian<?, ?, ?>, S, T, A, B>,
+        Optic<Cartesian<?, ?, ?>, Functor<?, ?>, S, T, A, B>,
         Monad<T, Lens<S, ?, A, B>>,
         Profunctor<S, T, Lens<?, ?, A, B>> {
     static <S, T, A, B> Lens<S, T, A, B> lens(Function1<? super S, ? extends A> getter,
                                               Function2<? super S, ? super B, ? extends T> setter) {
-        return adapt(Optic.<Cartesian<?, ?, ?>,
+        return adapt(Optic.<Cartesian<?, ?, ?>, Functor<?, ?>,
                 S, T, A, B,
                 Functor<B, ? extends Functor<?, ?>>,
                 Functor<T, ? extends Functor<?, ?>>,
@@ -28,12 +28,13 @@ public interface Lens<S, T, A, B> extends
                         tuple -> tuple.apply((s, fb) -> fb.map(setter.apply(s))))));
     }
     static <S, T, A, B> Lens<S, T, A, B> adapt(
-            Optic<? super Cartesian<?, ?, ?>, S, T, A, B> optic) {
+            Optic<? super Cartesian<?, ?, ?>, ? super Functor<?, ?>, S, T, A, B> optic) {
         return new Lens<>() {
             @Override
             public <CoP extends Profunctor<?, ?, ? extends Cartesian<?, ?, ?>>,
-                    FB extends Functor<B, ?>,
-                    FT extends Functor<T, ?>,
+                    CoF extends Functor<?, ? extends Functor<?, ?>>,
+                    FB extends Functor<B, ? extends CoF>,
+                    FT extends Functor<T, ? extends CoF>,
                     PAFB extends Profunctor<A, FB, ? extends CoP>,
                     PSFT extends Profunctor<S, FT, ? extends CoP>> PSFT apply(PAFB pafb) {
                 return optic.apply(pafb);

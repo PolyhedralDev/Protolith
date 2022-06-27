@@ -8,7 +8,7 @@ import io.vavr.Function2;
 import io.vavr.control.Either;
 
 public final class Matching<S, T, A, B> implements
-        Function2<Optic<? super Market<A, B, ?, ?>, S, T, A, B>, S, Either<T, A>> {
+        Function2<Optic<? super Market<A, B, ?, ?>, ? super Identity<?>, S, T, A, B>, S, Either<T, A>> {
 
     private static final Matching<?, ?, ?, ?> INSTANCE = new Matching<>();
 
@@ -16,9 +16,10 @@ public final class Matching<S, T, A, B> implements
     }
 
     @Override
-    public Either<T, A> apply(Optic<? super Market<A, B, ?, ?>, S, T, A, B> optic, S s) {
+    public Either<T, A> apply(Optic<? super Market<A, B, ?, ?>, ? super Identity<?>, S, T, A, B> optic, S s) {
         Market<A, B, A, Identity<B>> market = new Market<>(Identity::new, Either::right);
         return optic.<Market<A, B, ?, ?>,
+                        Identity<?>,
                         Identity<B>,
                         Identity<T>,
                         Market<A, B, A, Identity<B>>,
@@ -34,12 +35,12 @@ public final class Matching<S, T, A, B> implements
     }
 
     public static <S, T, A, B> Function1<S, Either<T, A>> matching(
-            Optic<? super Market<A, B, ?, ?>, S, T, A, B> optic) {
+            Optic<? super Market<A, B, ?, ?>, ? super Identity<?>, S, T, A, B> optic) {
         return Matching.<S, T, A, B>matching().apply(optic);
     }
 
     public static <S, T, A, B> Either<T, A> matching(
-            Optic<? super Market<A, B, ?, ?>, S, T, A, B> optic, S s) {
+            Optic<? super Market<A, B, ?, ?>, ? super Identity<?>, S, T, A, B> optic, S s) {
         return matching(optic).apply(s);
     }
 }

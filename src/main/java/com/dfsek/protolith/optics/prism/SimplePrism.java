@@ -14,12 +14,13 @@ public interface SimplePrism<S, A> extends Prism<S, S, A, A> {
     }
 
     static <S, A> SimplePrism<S, A> adapt(
-            Optic<? super Cocartesian<?, ?, ?>, S, S, A, A> prism) {
+            Optic<? super Cocartesian<?, ?, ?>, ? super Functor<?, ?>, S, S, A, A> prism) {
         return new SimplePrism<>() {
             @Override
             public <PN extends Profunctor<?, ?, ? extends Cocartesian<?, ?, ?>>,
-                    FB extends Functor<A, ?>,
-                    FT extends Functor<S, ?>,
+                    FN extends Functor<?, ? extends Functor<?, ?>>,
+                    FB extends Functor<A, ? extends FN>,
+                    FT extends Functor<S, ? extends FN>,
                     PAFB extends Profunctor<A, FB, ? extends PN>,
                     PSFT extends Profunctor<S, FT, ? extends PN>> PSFT apply(PAFB pafb) {
                 return prism.apply(pafb);

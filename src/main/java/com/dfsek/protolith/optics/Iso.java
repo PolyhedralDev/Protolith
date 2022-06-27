@@ -11,32 +11,38 @@ import static com.dfsek.protolith.DSL.re;
 import static com.dfsek.protolith.DSL.view;
 
 public interface Iso<S, T, A, B> extends
-        Optic<Profunctor<?, ?, ?>, S, T, A, B>,
+        Optic<Profunctor<?, ?, ?>,
+                Functor<?, ?>,
+                S, T, A, B>,
         Monad<T, Iso<S, ?, A, B>>,
         Profunctor<S, T, Iso<?, ?, A, B>> {
 
     static <P extends Profunctor<?, ?, ? extends P>,
             S, T, A, B,
-            FB extends Functor<B, ?>,
-            FT extends Functor<T, ?>,
+            F extends Functor<?, F>,
+            FB extends Functor<B, F>,
+            FT extends Functor<T, F>,
             PAFB extends Profunctor<A, FB, ? extends P>,
             PSFT extends Profunctor<S, FT, ? extends P>> Iso<S, T, A, B> iso(Function1<PAFB, PSFT> fn) {
         return new Iso<>() {
-            @Override
+
             @SuppressWarnings("unchecked")
-            public <CoP extends Profunctor<?, ?, ? extends Profunctor<?, ?, ?>>,
-                    CoFB extends Functor<B, ?>,
-                    CoFT extends Functor<T, ?>,
-                    CoPAFB extends Profunctor<A, CoFB, ? extends CoP>,
-                    CoPSFT extends Profunctor<S, CoFT, ? extends CoP>> CoPSFT apply(
-                    CoPAFB pafb) {
+            @Override
+            public <PN extends Profunctor<?, ?, ? extends Profunctor<?, ?, ?>>,
+                    FN extends Functor<?, ? extends Functor<?, ?>>,
+                    CoFB extends Functor<B, ? extends FN>,
+                    CoFT extends Functor<T, ? extends FN>,
+                    CoPAFB extends Profunctor<A, CoFB, ? extends PN>,
+                    CoPSFT extends Profunctor<S, CoFT, ? extends PN>> CoPSFT apply(CoPAFB pafb) {
                 return (CoPSFT) fn.apply((PAFB) pafb);
             }
         };
     }
+
     static <S, T, A, B> Iso<S, T, A, B> iso(Function1<? super S, ? extends A> to,
-                                              Function1<? super B, ? extends T> from) {
+                                            Function1<? super B, ? extends T> from) {
         return adapt(Optic.<Profunctor<?, ?, ?>,
+                Functor<?, ?>,
                 S, T, A, B,
                 Functor<B, ? extends Functor<?, ?>>,
                 Functor<T, ? extends Functor<?, ?>>,
@@ -46,13 +52,14 @@ public interface Iso<S, T, A, B> extends
     }
 
     static <S, T, A, B> Iso<S, T, A, B> adapt(
-            Optic<? super Profunctor<?, ?, ?>, S, T, A, B> optic) {
+            Optic<? super Profunctor<?, ?, ?>,? super Functor<?, ?>, S, T, A, B> optic) {
         return new Iso<>() {
 
             @Override
             public <PN extends Profunctor<?, ?, ? extends Profunctor<?, ?, ?>>,
-                    FB extends Functor<B, ?>,
-                    FT extends Functor<T, ?>,
+                    FN extends Functor<?, ? extends Functor<?, ?>>,
+                    FB extends Functor<B, ? extends FN>,
+                    FT extends Functor<T, ? extends FN>,
                     PAFB extends Profunctor<A, FB, ? extends PN>,
                     PSFT extends Profunctor<S, FT, ? extends PN>> PSFT apply(PAFB pafb) {
                 return optic.apply(pafb);
@@ -94,28 +101,27 @@ public interface Iso<S, T, A, B> extends
     }
 
     @Override
-    default <U, V> Iso<U, V, A, B> compose(Optic<? super Profunctor<?, ?, ?>, U, V, S, T> g) {
-        return iso(p -> g.apply(apply(p)));
+    default <U, V> Iso<U, V, A, B> compose(Optic<? super Profunctor<?, ?, ?>, ? super Functor<?, ?>, U, V, S, T> g) {
+        return (Iso<U, V, A, B>) Optic.super.compose(g);
     }
 
     @Override
     default <R> Iso<R, T, A, B> mapS(Function1<? super R, ? extends S> fn) {
-        return iso(pafb -> apply(pafb).mapLeft(fn));
+        return (Iso<R, T, A, B>) Optic.super.mapS(fn);
     }
-
 
     @Override
     default <U> Iso<S, U, A, B> mapT(Function1<? super T, ? extends U> fn) {
-        return iso(pafb -> apply(pafb).mapRight(ft -> ft.map(fn)));
+        return (Iso<S, U, A, B>) Optic.super.mapT(fn);
     }
 
     @Override
     default <C> Iso<S, T, C, B> mapA(Function1<? super A, ? extends C> fn) {
-        return iso(pcfb -> apply(pcfb.mapLeft(fn)));
+        return (Iso<S, T, C, B>) Optic.super.mapA(fn);
     }
 
     @Override
     default <Z> Iso<S, T, A, Z> mapB(Function1<? super Z, ? extends B> fn) {
-        return iso(pafz -> apply(pafz.mapRight(fz -> fz.map(fn))));
+        return (Iso<S, T, A, Z>) Optic.super.mapB(fn);
     }
 }

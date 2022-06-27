@@ -55,7 +55,7 @@ public interface DSL {
         return Re.re();
     }
 
-    static <S, T, A, B> Optic<Profunctor<?, ?, ?>, Const<T, ?>, B, B, T, T> re(Optic<? super Tagged<?, ?>, ? super Identity<?>, S, T, A, B> optic) {
+    static <S, T, A, B> Optic<Profunctor<?, ?, ?>, Const<T, ?>, B, A, T, S> re(Optic<? super Tagged<?, ?>, ? super Identity<?>, S, T, A, B> optic) {
         return Re.re(optic);
     }
 

@@ -1,12 +1,12 @@
 package dummy;
 
-import com.dfsek.protolith.optics.SimpleLens;
+import com.dfsek.protolith.optics.lens.SimpleLens;
 
 import java.util.Objects;
 
 public class Person {
-    public static SimpleLens<Person, Integer> AGE = SimpleLens.of(Person::getAge, Person::withAge);
-    public static SimpleLens<Person, String> NAME = SimpleLens.of(Person::getName, Person::withName);
+    public static SimpleLens<Person, Integer> AGE = SimpleLens.lens(Person::getAge, Person::withAge);
+    public static SimpleLens<Person, String> NAME = SimpleLens.lens(Person::getName, Person::withName);
     private final int age;
     private final String name;
 

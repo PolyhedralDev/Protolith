@@ -1,11 +1,11 @@
 package dummy;
 
-import com.dfsek.protolith.optics.SimpleLens;
+import com.dfsek.protolith.optics.lens.SimpleLens;
 import io.vavr.collection.List;
 
 public class Classroom {
-    public static SimpleLens<Classroom, Person> TEACHER = SimpleLens.of(Classroom::getTeacher, Classroom::withTeacher);
-    public static SimpleLens<Classroom, List<Person>> STUDENTS = SimpleLens.of(Classroom::getStudents, Classroom::withStudents);
+    public static SimpleLens<Classroom, Person> TEACHER = SimpleLens.lens(Classroom::getTeacher, Classroom::withTeacher);
+    public static SimpleLens<Classroom, List<Person>> STUDENTS = SimpleLens.lens(Classroom::getStudents, Classroom::withStudents);
     private final List<Person> students;
     private final Person teacher;
 

@@ -1,4 +1,3 @@
-/*
 import com.dfsek.protolith.optics.prism.Prisms;
 import com.dfsek.protolith.optics.prism.SimplePrism;
 import io.vavr.Function1;
@@ -36,4 +35,3 @@ public class PrismTest {
 
     }
 }
-*/

@@ -1,5 +1,6 @@
 package com.dfsek.protolith.optics.lens;
 
+import com.dfsek.protolith.functor.Applicative;
 import com.dfsek.protolith.functor.Functor;
 import com.dfsek.protolith.functor.Profunctor;
 import com.dfsek.protolith.functor.profunctors.Cartesian;
@@ -65,5 +66,30 @@ public interface Lens<S, T, A, B> extends
     @Override
     default <U> Lens<S, U, A, B> pure(U u) {
         return lens(View.view(this), (s, b) -> u);
+    }
+
+    @Override
+    default <U, V> Lens<U, V, A, B> compose(Optic<? super Cartesian<?, ?, ?>, ? super Functor<?, ?>, U, V, S, T> g) {
+        return adapt(Optic.super.compose(g));
+    }
+
+    @Override
+    default <R> Lens<R, T, A, B> mapS(Function1<? super R, ? extends S> fn) {
+        return adapt(Optic.super.mapS(fn));
+    }
+
+    @Override
+    default <U> Lens<S, U, A, B> mapT(Function1<? super T, ? extends U> fn) {
+        return adapt(Optic.super.mapT(fn));
+    }
+
+    @Override
+    default <C> Lens<S, T, C, B> mapA(Function1<? super A, ? extends C> fn) {
+        return adapt(Optic.super.mapA(fn));
+    }
+
+    @Override
+    default <Z> Lens<S, T, A, Z> mapB(Function1<? super Z, ? extends B> fn) {
+        return adapt(Optic.super.mapB(fn));
     }
 }
